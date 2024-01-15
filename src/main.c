@@ -51,20 +51,20 @@ int main(int argc, char *argv[])
 void try_connect(struct addrinfo *addr)
 {
 	char ip[INET6_ADDRSTRLEN];
-	void *addr;
+	void *in_addr;
 	in_port_t port;
 
 	if (addr->ai_family == AF_INET) {
 		struct sockaddr_in *ipv4 = (struct sockaddr_in *)addr->ai_addr;
-		addr = &(ipv4->sin_addr);
+		in_addr = &(ipv4->sin_addr);
 		port = ipv4->sin_port;
 	} else {
 		struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)addr->ai_addr;
-		addr = &(ipv6->sin6_addr);
+		in_addr = &(ipv6->sin6_addr);
 		port = ipv6->sin6_port;
 	}
 
-	const char *p_ip = inet_ntop(addr->ai_family, addr, ip, sizeof ip);
+	const char *p_ip = inet_ntop(addr->ai_family, in_addr, ip, sizeof ip);
 	if (p_ip == NULL)
 		perror("inet_ntop");
 
