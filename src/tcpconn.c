@@ -32,9 +32,8 @@ int connect_with_timeout_inner(int fd, const struct sockaddr *addr, socklen_t ad
 			} else {
 				struct timespec now;
 				ret = clock_gettime(CLOCK_MONOTONIC, &now);
-				if (ret == -1) {
+				if (ret == -1)
 					break;
-				}
 
 				struct timespec deadline = {
 					.tv_sec = now.tv_sec + timeout->tv_sec,
@@ -54,8 +53,10 @@ int connect_with_timeout_inner(int fd, const struct sockaddr *addr, socklen_t ad
 					int to_msec = _MSEC((deadline.tv_sec - now.tv_sec), (deadline.tv_nsec - now.tv_nsec));
 
 					ret = poll(&pfd, 1, to_msec);
+
+					// Maybe interrupted.
 					if (ret == -1)
-						break;
+						continue;
 
 					// Nothing happened, we issue a timeout.
 					if (ret == 0) {
@@ -69,13 +70,13 @@ int connect_with_timeout_inner(int fd, const struct sockaddr *addr, socklen_t ad
 						if (ret == -1) {
 							break;
 						} else {
-							// poll is done and we set erron to the socket error.
+							// poll is done and we set errno to the socket error.
 							if (err != 0) {
 								errno = err;
 								ret = -1;
 							}
 
-							// ret is guarenteed to be 0.
+							// ret is guaranteed to be 0.
 							break;
 						}
 					}
@@ -97,9 +98,8 @@ int connect_with_timeout_inner(int fd, const struct sockaddr *addr, socklen_t ad
 
 int connect_with_timeout(int fd, const struct sockaddr *addr, socklen_t addrlen, struct timeval *timeout)
 {
-	if (timeout == NULL || timeout->tv_sec == 0) {
+	if (timeout == NULL || (timeout->tv_sec == 0 && timeout->tv_usec == 0))
 		return connect(fd, addr, addrlen);
-	} else {
+	else
 		return connect_with_timeout_inner(fd, addr, addrlen, timeout);
-	}
 }

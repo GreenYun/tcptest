@@ -65,17 +65,16 @@ void try_connect(struct addrinfo *addr)
 	}
 
 	const char *p_ip = inet_ntop(addr->ai_family, addr, ip, sizeof ip);
-	if (p_ip == NULL) {
+	if (p_ip == NULL)
 		perror("inet_ntop");
-	}
 
 	port = _BSWAP_16(port);
 
-	if (addr->ai_family == AF_INET) {
+	if (addr->ai_family == AF_INET)
 		printf("Trying IP %s:%d ... ", p_ip, port);
-	} else {
+	else
 		printf("Trying IPv6 [%s]:%d ... ", p_ip, port);
-	}
+
 	fflush(stdout);
 
 	int fd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
@@ -91,15 +90,15 @@ void try_connect(struct addrinfo *addr)
 
 	if (connect_with_timeout(fd, addr->ai_addr, addr->ai_addrlen, &to) == -1) {
 		int err = errno;
-		if (err == ETIMEDOUT) {
+		if (err == ETIMEDOUT)
 			printf("timed out.\n");
-		} else if (err == ECONNREFUSED) {
+		else if (err == ECONNREFUSED)
 			printf("refused.\n");
-		} else if (err == EHOSTUNREACH) {
+		else if (err == EHOSTUNREACH)
 			printf("unreachable.\n");
-		} else {
+		else
 			printf("failed with error `%s'.\n", strerror(err));
-		}
+
 	} else {
 		printf("connected.\n");
 	}
@@ -123,9 +122,8 @@ void test_connect(const char *host, const char *service)
 		exit(EXIT_FAILURE);
 	}
 
-	for (struct addrinfo *p = addr; p != NULL; p = p->ai_next) {
+	for (struct addrinfo *p = addr; p != NULL; p = p->ai_next)
 		try_connect(p);
-	}
 
 	freeaddrinfo(addr);
 }
