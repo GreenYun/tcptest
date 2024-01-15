@@ -29,8 +29,8 @@ int main(int argc, char *argv[])
 
 	errno = 0;
 	char *endptr = NULL;
-	unsigned long port = strtoul(service, &endptr, 10);
-	if (errno != 0) {
+	unsigned long port = strtoul(service, &endptr, 0);
+	if (port != 0 && errno != 0) {
 		perror("strtoul");
 	}
 
