@@ -14,16 +14,14 @@ int connect_with_timeout_inner(int fd, const struct sockaddr *addr, socklen_t ad
 
 	// Store the original socket flags.
 	int sock_flags_store = fcntl(fd, F_GETFL, 0);
-	if (sock_flags_store == -1) {
+	if (sock_flags_store == -1)
 		return -1;
-	}
 
 	// Set the socket to non-blocking mode.
 	int sock_flags = sock_flags_store | O_NONBLOCK;
 	ret = fcntl(fd, F_SETFL, sock_flags);
-	if (ret == -1) {
+	if (ret == -1)
 		return -1;
-	}
 
 	do {
 		if (connect(fd, addr, addrlen) == -1) {
