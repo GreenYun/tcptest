@@ -24,24 +24,7 @@ int main(int argc, char *argv[])
 
 	const char *host = argv[1];
 	const char *service = argv[2];
-
-	errno = 0;
-	char *endptr = NULL;
-	unsigned long port = strtoul(service, &endptr, 0);
-	if (port != 0 && errno != 0) {
-		perror("strtoul");
-	}
-
-	if (*endptr == '\0') {
-		if (port > MAX_PORT_NUM) {
-			fprintf(stderr, "Invalid port number.\n");
-			exit(EXIT_FAILURE);
-		} else {
-			test_connect_with_port(host, port);
-		}
-	} else {
-		test_connect(host, service);
-	}
+	test_connect(host, service);
 
 	return 0;
 }
@@ -122,11 +105,4 @@ void test_connect(const char *host, const char *service)
 		try_connect(p);
 
 	freeaddrinfo(addr);
-}
-
-void test_connect_with_port(const char *host, unsigned short port)
-{
-	char service[6];
-	snprintf(service, sizeof service, "%hu", port);
-	test_connect(host, service);
 }
