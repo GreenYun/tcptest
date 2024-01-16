@@ -1,9 +1,9 @@
 #include "tcpconn.h"
 
 #include <errno.h>
+#include <time.h>
 #include <fcntl.h>
 #include <poll.h>
-#include <time.h>
 
 // Convert the timespec to milliseconds.
 #define _MSEC(sec, nsec) ((sec) * 1000 + (nsec) / 1000000)
