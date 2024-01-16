@@ -13,7 +13,6 @@
 #define MAX_PORT_NUM 65535
 
 void test_connect(const char *host, const char *service);
-void test_connect_with_port(const char *host, unsigned short port);
 
 int main(int argc, char *argv[])
 {
