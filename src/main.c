@@ -70,13 +70,18 @@ void try_connect(struct addrinfo *addr)
 		int err = errno;
 		if (err == ETIMEDOUT)
 			printf("timed out.\n");
+		else if (err == ENETDOWN)
+			printf("network down.\n");
+		else if (err == ENETUNREACH)
+			printf("unreachable.\n");
+		else if (err == ENETRESET)
+			printf("TCP reset.\n");
 		else if (err == ECONNREFUSED)
 			printf("refused.\n");
-		else if (err == EHOSTUNREACH)
-			printf("unreachable.\n");
+		else if (err == EHOSTDOWN)
+			printf("host is down.\n");
 		else
 			printf("failed with error `%s'.\n", strerror(err));
-
 	} else {
 		printf("connected.\n");
 	}
