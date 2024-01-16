@@ -12,8 +12,6 @@
 
 #define MAX_PORT_NUM 65535
 
-#define _BSWAP_16(x) ((((x) & 0xFF) << 8) | (((x) >> 8) & 0xFF))
-
 void test_connect(const char *host, const char *service);
 void test_connect_with_port(const char *host, unsigned short port);
 
@@ -52,23 +50,21 @@ void try_connect(struct addrinfo *addr)
 {
 	char ip[INET6_ADDRSTRLEN];
 	void *in_addr;
-	in_port_t port;
+	unsigned short port;
 
 	if (addr->ai_family == AF_INET) {
 		struct sockaddr_in *ipv4 = (struct sockaddr_in *)addr->ai_addr;
 		in_addr = &(ipv4->sin_addr);
-		port = ipv4->sin_port;
+		port = ntohs(ipv4->sin_port);
 	} else {
 		struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)addr->ai_addr;
 		in_addr = &(ipv6->sin6_addr);
-		port = ipv6->sin6_port;
+		port = ntohs(ipv6->sin6_port);
 	}
 
 	const char *p_ip = inet_ntop(addr->ai_family, in_addr, ip, sizeof ip);
 	if (p_ip == NULL)
 		perror("inet_ntop");
-
-	port = _BSWAP_16(port);
 
 	if (addr->ai_family == AF_INET)
 		printf("Trying IP %s:%d ... ", p_ip, port);
